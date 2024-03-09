@@ -17,6 +17,15 @@ spring:
         format_sql: ture
         use_sql_comments: true
 
-
+# jwt secret key ??
   jwt:
     secret: vmfhaltmskdlstkfkdgodyroqkfwkdbalroqkfwkdbalaaaaaaaaaaaaaaaabbbbb
+
+
+# SWAGGER 설정
+springdoc:
+  swagger-ui:
+    path: /api-test
+    groups-order: DESC
+    tag-sorter: alpha
+
