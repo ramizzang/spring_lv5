@@ -9,6 +9,7 @@ import com.sparta.shopapi.global.handler.exception.CustomApiException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -21,14 +22,14 @@ import static com.sparta.shopapi.global.handler.exception.ErrorCode.EMAIL_DUPLIC
 @RequiredArgsConstructor
 public class MemberService {
     private final MemberRepository memberRepository;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     // ADMIN_TOKEN 일반사용자인지 관리자인지 구분하기 위한 토큰
     private final String ADMIN_TOKEN = "AAABnvxRVklrnYxKZ0aHgTBcXukeZygoC";
 
     public SignUpResponseDto signUp(SignUpRequestDto requestDto) {
         //비밀번호 암호화
-        String password = bCryptPasswordEncoder.encode(requestDto.getPassword());
+        String password = passwordEncoder.encode(requestDto.getPassword());
 
         //이메일 중복 확인
         String email = requestDto.getEmail();

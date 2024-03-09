@@ -16,12 +16,12 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api")
+@RequestMapping("/api/member")
 @Tag(name = "MEMBER API", description = "회원가입 관련 API")
 public class MemberController {
     private final MemberService memberService;
 
-    @PostMapping("/member")
+    @PostMapping("/signup")
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary ="사용자 회원가입", description = "사용자 회원가입 API")
     @ApiResponse(responseCode = "201", description = "회원 가입 성공", content = @Content(mediaType = "application/json"))

@@ -1,29 +1,56 @@
 package com.sparta.shopapi.global.config;
 
-import com.sparta.shopapi.global.jwt.JwtUil;
+import com.sparta.shopapi.global.jwt.JwtUtil;
+import com.sparta.shopapi.global.security.JwtAuthenticationFilter;
+import com.sparta.shopapi.global.security.JwtAuthorizationFilter;
+import com.sparta.shopapi.global.security.UserDetailsServiceImpl;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
 
 
-    private final JwtUil jwtUil;
+    private final JwtUtil jwtUtil;
+    private final UserDetailsServiceImpl userDetailsService;
+    private final AuthenticationConfiguration authenticationConfiguration;
 
-    public SecurityConfig(JwtUil jwtUil) {
-        this.jwtUil = jwtUil;
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 
     @Bean
-    public BCryptPasswordEncoder bCryptPasswordEncoder(){
-        return new BCryptPasswordEncoder();
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
+        return configuration.getAuthenticationManager();
+    }
+
+
+    @Bean
+    public JwtAuthenticationFilter jwtAuthenticationFilter() throws Exception {
+        JwtAuthenticationFilter filter = new JwtAuthenticationFilter(jwtUtil);
+        filter.setAuthenticationManager(authenticationManager(authenticationConfiguration));
+        return filter;
+    }
+
+
+    @Bean
+    public JwtAuthorizationFilter jwtAuthorizationFilter() {
+        return new JwtAuthorizationFilter(jwtUtil, userDetailsService);
     }
 
     @Bean
@@ -38,10 +65,13 @@ public class SecurityConfig {
                         .anyRequest().authenticated()
                 )
 
-                .csrf(auth->auth.disable())
+                .csrf(csrf->csrf.disable())
                 .formLogin(formLogin->formLogin.disable())
-                .sessionManagement(auth->auth.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .httpBasic(auth->auth.disable())
+                .sessionManagement(sessionManagement->sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .httpBasic(httpBasic->httpBasic.disable())
+                //필터 등록
+                .addFilterBefore(jwtAuthorizationFilter(),JwtAuthenticationFilter.class)
+                .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 }
