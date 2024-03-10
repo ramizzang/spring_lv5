@@ -26,15 +26,19 @@ public class ProductController {
     @ApiResponse(responseCode = "201", description = "상품 등록 성공", content = @Content(mediaType = "application/json"))
     public ResponseDto<RegisterProductResponseDto> registerProduct(@Valid  @RequestBody RegisterProductRequestDto requestDto){ // 상품 등록
         RegisterProductResponseDto responseDto = productService.registerProduct(requestDto);
-        return ResponseDto.success("상품이 정상적으로 등록되었습니다." ,responseDto);
+        return ResponseDto.success("상품 정상 등록" ,responseDto);
     }
 
-    // 선택한 상품의 상세 정보 조회
-//    @GetMapping
-//    public void readProduct(){
-//
-//    }
-//
+//     선택한 상품의 상세 정보 조회
+    @GetMapping("/{productId}")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary ="선택한 상품 조회", description = "선택한 상품 조회 API")
+    @ApiResponse(responseCode = "200", description = "상품 조회 성공", content = @Content(mediaType = "application/json"))
+    public ResponseDto<RegisterProductResponseDto> readProduct(@PathVariable Long productId){
+        RegisterProductResponseDto responseDto = productService.readProduct(productId);
+        return ResponseDto.success("선택한 상품 정상 조회" ,responseDto);
+    }
+
 //    // 상품 전체 목록 조회
 //    @GetMapping
 //    public void readProductList(){

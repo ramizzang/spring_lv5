@@ -47,7 +47,9 @@ public class MemberService {
             }
             role = MemberRole.ADMIN;
         }
+
+        Member member = memberRepository.save(requestDto.toEntity(role,password));
         // 사용자 등록, 권한이랑 암호화한 비밀번호 보내서 저장
-        return new SignUpResponseDto(memberRepository.save(requestDto.toEntity(role,password)));
+        return new SignUpResponseDto(member);
     }
 }

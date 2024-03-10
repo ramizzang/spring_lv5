@@ -11,6 +11,9 @@ public enum ErrorCode {
     // member
     EMAIL_DUPLICATION(" Email is Duplication"), // 중복된 이메일
     ADMIN_TOKEN_MISMATCH("관리자 토큰이 일치하지 않습니다."), // 관리자 가입
+
+    //product
+    NOT_FOUND_PRODUCT_ID("존재하지 않는 상품입니다."),
     ;
 
     private final String message;
