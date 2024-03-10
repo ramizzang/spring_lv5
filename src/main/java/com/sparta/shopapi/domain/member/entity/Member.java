@@ -1,11 +1,15 @@
 package com.sparta.shopapi.domain.member.entity;
 
+import com.sparta.shopapi.domain.cart.entity.Cart;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.context.annotation.Configuration;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name="member")
@@ -26,7 +30,7 @@ public class Member {
     @Enumerated(value = EnumType.STRING)
     private Gender gender;
 
-    @Column(name="phone", unique = true)
+    @Column(name="phone", nullable = false)
     private String phone;
 
     @Column(name="address")
@@ -35,6 +39,9 @@ public class Member {
     @Column(name="role", nullable = false)
     @Enumerated(value = EnumType.STRING)
     private MemberRole role;
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    private List<Cart> carts = new ArrayList<>();
 
 
     @Builder
