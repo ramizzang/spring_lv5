@@ -17,6 +17,12 @@ public enum ErrorCode {
 
     NOT_FOUND_CART_ID("장바구니에 상품이 존재하지 않습니다."),
     UNAUTHORIZED_ACCESS_TO_CART("장바구니에 접근할 권한이 없습니다."),
+
+    //JWT
+   INVALID_SIGNATURE("Invalid JWT signature"),
+    EXPIRED_TOKEN("Expired JWT token"),
+    UNSUPPORTED_TOKEN("Unsupported JWT token"),
+    EMPTY_CLAIMS("JWT claims is empty");
     ;
 
     private final String message;

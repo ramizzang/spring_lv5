@@ -1,5 +1,7 @@
 package com.sparta.shopapi.global.config;
 
+import com.sparta.shopapi.global.handler.exception.CustomAccessDeniedHandler;
+import com.sparta.shopapi.global.handler.exception.CustomAuthenticationEntryPoint;
 import com.sparta.shopapi.global.jwt.JwtUtil;
 import com.sparta.shopapi.global.security.JwtAuthenticationFilter;
 import com.sparta.shopapi.global.security.JwtAuthorizationFilter;
@@ -27,6 +29,8 @@ public class SecurityConfig {
     private final JwtUtil jwtUtil;
     private final UserDetailsServiceImpl userDetailsService;
     private final AuthenticationConfiguration authenticationConfiguration;
+    private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
+    private final CustomAccessDeniedHandler customAccessDeniedHandler;
 
 
     @Bean
@@ -70,8 +74,17 @@ public class SecurityConfig {
                 .sessionManagement(sessionManagement->sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .httpBasic(httpBasic->httpBasic.disable())
                 //필터 등록
+                .exceptionHandling(handler->handler
+                        .authenticationEntryPoint(this.customAuthenticationEntryPoint)
+                        .accessDeniedHandler(this.customAccessDeniedHandler))
                 .addFilterBefore(jwtAuthorizationFilter(),JwtAuthenticationFilter.class)
+                .exceptionHandling(handler->handler
+                        .authenticationEntryPoint(this.customAuthenticationEntryPoint)
+                        .accessDeniedHandler(this.customAccessDeniedHandler))
                 .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
+                .exceptionHandling(handler->handler
+                        .authenticationEntryPoint(this.customAuthenticationEntryPoint)
+                        .accessDeniedHandler(this.customAccessDeniedHandler))
                 .build();
     }
 }

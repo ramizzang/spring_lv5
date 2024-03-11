@@ -14,6 +14,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.io.IOException;
+import java.nio.file.AccessDeniedException;
 
 @Slf4j(topic = "로그인 & JWT 생성")
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
@@ -69,18 +70,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) {
-        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // 401 상태 코드 설정
-        response.setContentType("application/json"); // 응답의 컨텐트 타입을 JSON으로 설정
-        response.setCharacterEncoding("UTF-8"); // 문자 인코딩 설정
+        throw failed;
 
-        // 에러 메시지를 JSON 형태로 작성
-        String errorMessage = "{\"error\": \"로그인 실패\", \"message\": \"" + failed.getMessage() + "\"}";
-
-        try {
-            response.getWriter().write(errorMessage); // 응답에 에러 메시지 작성
-        } catch (IOException e) {
-            log.error("응답 메시지 작성 중 오류 발생", e);
-        }
     }
 
 

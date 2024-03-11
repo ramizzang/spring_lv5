@@ -7,8 +7,14 @@ import org.springframework.http.HttpStatus;
 public class CustomApiException extends RuntimeException {
 
     private final HttpStatus httpStatus;
-    public CustomApiException(String message,  HttpStatus httpStatus) {
+
+    public CustomApiException(String message, HttpStatus httpStatus) {
         super(message);
+        this.httpStatus = httpStatus;
+    }
+
+    public CustomApiException(String message,  HttpStatus httpStatus,Throwable cause) {
+        super(message, cause);
         this.httpStatus = httpStatus;
     }
 }

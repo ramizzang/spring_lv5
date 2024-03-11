@@ -1,18 +1,23 @@
 package com.sparta.shopapi.global.jwt;
 
 import com.sparta.shopapi.domain.member.entity.MemberRole;
+import com.sparta.shopapi.global.handler.exception.CustomApiException;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import java.security.Key;
 import java.util.Base64;
 import java.util.Date;
+
+import static com.sparta.shopapi.global.handler.exception.ErrorCode.*;
+import static com.sparta.shopapi.global.handler.exception.ErrorCode.EMPTY_CLAIMS;
 
 @Slf4j(topic = "JwtUtil")
 @Component
@@ -67,14 +72,17 @@ public class JwtUtil {
             return true;
         } catch (SecurityException | MalformedJwtException | SignatureException e) {
             log.error("Invalid JWT signature, 유효하지 않는 JWT 서명 입니다.");
+            throw new CustomApiException(INVALID_SIGNATURE.getMessage(),HttpStatus.UNAUTHORIZED, e);
         } catch (ExpiredJwtException e) {
             log.error("Expired JWT token, 만료된 JWT token 입니다.");
+            throw new CustomApiException(EXPIRED_TOKEN.getMessage(),HttpStatus.UNAUTHORIZED, e);
         } catch (UnsupportedJwtException e) {
             log.error("Unsupported JWT token, 지원되지 않는 JWT 토큰 입니다.");
+            throw new CustomApiException(UNSUPPORTED_TOKEN.getMessage(),HttpStatus.UNAUTHORIZED, e);
         } catch (IllegalArgumentException e) {
             log.error("JWT claims is empty, 잘못된 JWT 토큰 입니다.");
+            throw new CustomApiException(EMPTY_CLAIMS.getMessage(),HttpStatus.UNAUTHORIZED, e);
         }
-        return false;
     }
 
     // 토큰에서 사용자 정보 가져오기
