@@ -4,13 +4,10 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static com.sparta.shopapi.global.handler.exception.ErrorCode.INVALID_TYPE_VALUE;
 
 
 @Getter
@@ -46,11 +43,6 @@ public class ErrorResponse {
         return new ErrorResponse(message, errors);
     }
 
-    public static ErrorResponse of(MethodArgumentTypeMismatchException e) {
-        final String value = e.getValue() == null ? "" : e.getValue().toString();
-        final List<ErrorResponse.FieldError> errors = ErrorResponse.FieldError.of(e.getName(), value, e.getErrorCode());
-        return new ErrorResponse(INVALID_TYPE_VALUE.getMessage(), errors);
-    }
 
 
     @Getter

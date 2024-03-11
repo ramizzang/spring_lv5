@@ -5,7 +5,6 @@ public enum ErrorCode {
     // common
     INVALID_INPUT_VALUE(" 입력한 값을 확인하세요."), // 벨리데이션 오류
     INTERNAL_SERVER_ERROR("Server Error"), // 서버 오류
-    INVALID_TYPE_VALUE(" 입력한 값을 확인하세요."), // 입력한 값의 타입이 잘못
     HANDLE_ACCESS_DENIED(" Access is Denied"),
 
     // member
@@ -14,6 +13,10 @@ public enum ErrorCode {
 
     //product
     NOT_FOUND_PRODUCT_ID("존재하지 않는 상품입니다."),
+    INSUFFICIENT_STOCK("주문 가능 수량을 확인하세요."), // 재고 부족
+
+    NOT_FOUND_CART_ID("장바구니에 상품이 존재하지 않습니다."),
+    UNAUTHORIZED_ACCESS_TO_CART("장바구니에 접근할 권한이 없습니다."),
     ;
 
     private final String message;

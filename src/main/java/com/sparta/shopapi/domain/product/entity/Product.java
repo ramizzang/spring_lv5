@@ -1,14 +1,18 @@
 package com.sparta.shopapi.domain.product.entity;
 
 import com.sparta.shopapi.domain.cart.entity.Cart;
+import com.sparta.shopapi.global.handler.exception.CustomApiException;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.http.HttpStatus;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.sparta.shopapi.global.handler.exception.ErrorCode.INSUFFICIENT_STOCK;
 
 @Entity
 @Getter
@@ -44,5 +48,16 @@ public class Product {
         this.quantity = quantity;
         this.description = description;
         this.category = category;
+    }
+
+    public void decressStock(Integer quantity) {
+        if (this.quantity < quantity) { // 재고가 주문수량 보다 작으면
+            throw new CustomApiException(INSUFFICIENT_STOCK.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        this.quantity -= quantity;
+    }
+
+    public void increaseStock(Integer quantity) {
+        this.quantity += quantity;
     }
 }

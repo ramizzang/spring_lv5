@@ -13,4 +13,7 @@ public class ResponseDto<T> {
     public static <T> ResponseDto<T> success(String message, T data) {
         return new ResponseDto<>(true, message, data);
     }
+    public static <T> ResponseDto<T> success(String message) {
+        return new ResponseDto<>(true, message, null);
+    }
 }

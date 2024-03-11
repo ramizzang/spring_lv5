@@ -8,6 +8,7 @@ import com.sparta.shopapi.domain.member.repository.MemberRepository;
 import com.sparta.shopapi.global.handler.exception.CustomApiException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -35,7 +36,7 @@ public class MemberService {
         String email = requestDto.getEmail();
         Optional<Member> checkEmail = memberRepository.findByEmail(email);
         if(checkEmail.isPresent()){
-            throw new CustomApiException(EMAIL_DUPLICATION.getMessage());
+            throw new CustomApiException(EMAIL_DUPLICATION.getMessage(), HttpStatus.BAD_REQUEST);
         }
 
         // 사용자 권한 확인
@@ -43,7 +44,7 @@ public class MemberService {
         if(requestDto.isAdmin()){
             if(!ADMIN_TOKEN.equals(requestDto.getAdminToken())){
                 // 관리자 암호 불일치
-                throw new CustomApiException(ADMIN_TOKEN_MISMATCH.getMessage());
+                throw new CustomApiException(ADMIN_TOKEN_MISMATCH.getMessage(), HttpStatus.BAD_REQUEST);
             }
             role = MemberRole.ADMIN;
         }
